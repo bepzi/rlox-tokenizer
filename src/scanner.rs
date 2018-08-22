@@ -208,7 +208,7 @@ impl<'a> Scanner<'a> {
                             }
                         }
                     } else if self.peek_next_is("*") {
-                        unimplemented!("multi-line comments not yet supported");
+                        self.skip_multiline_comments();
                     }
                 }
 
@@ -222,6 +222,43 @@ impl<'a> Scanner<'a> {
         // Re-sync the start and current indices
         // `start` needs to point to the start of a lexeme
         self.start = self.current;
+    }
+
+    /// Advances the `Scanner` past multiline comments until it is
+    /// either at the end of the source code or it points to a valid
+    /// grapheme.
+    ///
+    /// Expects the current grapheme index to point to the opening
+    /// slash "/" of the comment.
+    fn skip_multiline_comments(&mut self) {
+        // We know the current and next graphemes are "/*"
+        self.take();
+        self.take();
+
+        // We already have one opening comment marker
+        let mut stack: Vec<&'static str> = vec!["/*"];
+        
+        while let Some(current) = self.peek() {
+            if current == "/" && self.peek_next_is("*") {
+                // Opening comment
+                stack.push("/*");
+                self.take();
+                self.take();
+            } else if current == "*" && self.peek_next_is("/") {
+                // Closing comment
+                stack.pop();
+                self.take();
+                self.take();
+                
+                if stack.is_empty() {
+                    // Every "/*" found its "*/"
+                    return;
+                }
+            } else {
+                // Consume it, it's part of the comment
+                self.take();
+            }
+        }
     }
 
     /// Constructs a new syntax `Token` using the current internal

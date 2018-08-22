@@ -237,7 +237,7 @@ impl<'a> Scanner<'a> {
 
         // We already have one opening comment marker
         let mut stack: Vec<&'static str> = vec!["/*"];
-        
+
         while let Some(current) = self.peek() {
             if current == "/" && self.peek_next_is("*") {
                 // Opening comment
@@ -249,7 +249,7 @@ impl<'a> Scanner<'a> {
                 stack.pop();
                 self.take();
                 self.take();
-                
+
                 if stack.is_empty() {
                     // Every "/*" found its "*/"
                     return;

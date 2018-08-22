@@ -18,7 +18,7 @@
 //! # Implementation Differences
 //!
 //! - Supports UTF-8-formatted source code
-//! - Supports multi-line comments
+//! - Supports multi-line comments (including nested comments)
 //! - Doesn't need a special `EOF` syntax token
 //! - Rust-style error handling with `Result`
 
@@ -42,7 +42,7 @@ pub use crate::token::{Token, TokenType};
 ///
 /// ```
 /// # use rlox_tokenizer::{tokenize, Token, TokenType};
-/// let source = "var номер = (42);";
+/// let source = "var номер = (42); /* Hello, Lox! */";
 /// let tokens = tokenize(&source).unwrap();
 ///
 /// let token_types: Vec<TokenType> = tokens.iter().map(|&t| t.token_type).collect();

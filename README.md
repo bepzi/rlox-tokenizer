@@ -7,6 +7,13 @@ Lox is a toy scripting language featured in Bob Nystrom's book
 provides methods for the initial transformation of Lox source code
 into abstract syntax tokens.
 
+This implementation differs from the C reference implementation, most notably:
+
+- Full support for UTF-8 source code
+- Support for nested multiline comments
+- Doesn't require a magic `EOF` syntax token
+- Rust-style error handling with `Result`
+
 ## Usage
 
 Inside `Cargo.toml`:
@@ -28,6 +35,3 @@ cargo test && cargo doc --no-deps --open
 Feel free to submit a pull request or file an issue! Please run your
 code through `rustfmt` first, though.
 
-## License
-
-Licensed under the Apache v2.0 License.

@@ -782,6 +782,58 @@ mod tests {
     }
 
     #[test]
+    fn skip_leading_multiline_comment() {
+        let source = r#"/* This is a multi
+line comment that spans
+several lines */
+
+B
+"#;
+        let mut s = Scanner::new(source);
+        s.skip_ignorables();
+
+        assert_eq!(s.peek(), Some("B"));
+    }
+
+    #[test]
+    fn skip_inner_multiline_comment() {
+        let source = r#"A
+/* This is a multi
+line comment that spans
+several lines */
+B
+"#;
+        let mut s = Scanner::new(source);
+        // Skip the leading grapheme
+        s.take();
+        s.skip_ignorables();
+
+        assert_eq!(s.peek(), Some("B"));
+    }
+
+    #[test]
+    fn skip_inline_multiline_comment() {
+        let source = "A /* inline multiline comment */ B";
+        let mut s = Scanner::new(source);
+        // Skip the leading grapheme
+        s.take();
+        s.skip_ignorables();
+
+        assert_eq!(s.peek(), Some("B"));
+    }
+
+    #[test]
+    fn skip_nesting_multiline_comment() {
+        let source = r#"/* This is a multiline comment
+/* it has /* nested comments */ */ inside it */
+B"#;
+        let mut s = Scanner::new(source);
+        s.skip_ignorables();
+
+        assert_eq!(s.peek(), Some("B"));
+    }
+
+    #[test]
     fn skip_leading_line_comment() {
         let mut s = Scanner::new(" // Comment\r Hello");
         s.skip_ignorables();

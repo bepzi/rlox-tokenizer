@@ -21,7 +21,7 @@ Inside `Cargo.toml`:
 ``` toml
 # ...
 [dependencies]
-tokenizer = { git = "https://github.com/ben01189998819991197253/rlox-tokenizer.git" }
+rlox-tokenizer = { git = "https://github.com/ben01189998819991197253/rlox-tokenizer.git" }
 ```
 
 ## Documentation
